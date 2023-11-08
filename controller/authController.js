@@ -13,17 +13,17 @@ const signup = catchAsync(async (req, res) => {
  
   const hashedPassword = await bcrypt.hash(password, 10); 
 
-    const newUser = await User.create({name,email,password: hashedPassword,role});
+  const newUser = await User.create({name,email,password: hashedPassword,role});
   const token = jwt.sign({ id: newUser._id }, process.env.jwt_SECRET);
 
-
-    res.status(201).json({ 
+  
+   return res.status(201).json({ 
       status: 'success',
-      token,
-      data: newUser,
+      data: [{token},{newUser}]
     });        
   }
 );
+
 
 const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -51,33 +51,24 @@ const login = catchAsync(async (req, res, next) => {
 });
 
 const protect = catchAsync(async (req, res, next) => {
-  console.log(123);
     const token = req.headers.authorization.split(' ')[1];
-    console.log(234);
     if (!token) {
       return next(new AppError('You are not logged in! Please log in to get access', 401));
     }
   
       const verify = await promisify(jwt.verify)(token, process.env.jwt_SECRET);
-      console.log(345);
       const currentUser = await User.findById(verify.id);
-    console.log(456);
       if (!currentUser) {
         return next(new AppError('Invalid user ID provided', 401));
       }
-      console.log(999);
       req.User = currentUser;
-      console.log(req.User);
       next();
  
   });
   
 const restrictTo = (...roles) => {
-    console.log(1);
     return (req, res, next) => {
-        console.log(2);
         if (!roles.includes(req.User.role)) {
-            console.log(roles);
             return next(new AppError("You do not have permission to perform this action", 403));
         }
         next();
@@ -91,7 +82,7 @@ const logout = (req, res) => {
     });
 
      
-    res.status(200).json({ 
+  return  res.status(200).json({ 
         status: 'success' 
     });
   };

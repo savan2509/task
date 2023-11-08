@@ -4,8 +4,8 @@ const authController = require('../controller/authController')
 
 const router = express.Router();
 
-router.post('/createProduct',createProduct)
+router.post('/createProduct',authController.protect,createProduct)
 router.patch('/:productId', updateProduct)
-router.delete('/:productId', deleteProduct)
+router.delete('/:productId',authController.protect, deleteProduct)
 
 module.exports = router

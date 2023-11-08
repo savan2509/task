@@ -18,7 +18,7 @@ const createStore = catchAsync(async(req, res, next) => {
     })
     return res.status(200).json({
         status:'success',
-        data:{newStore}
+        data:newStore
     })
 })
 
@@ -34,12 +34,10 @@ const findStore = catchAsync(async (req, res, next) => {
         geolocation: { $geoWithin: { $centerSphere: [[longitude, latitude],radius] } }
     });
   
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       results: store.length,
-      data: {
-        data: store
-      }
+      data:store
     });
 });
 module.exports = {createStore,findStore}

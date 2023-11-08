@@ -7,7 +7,7 @@ const addToCart = catchAsync(async(req, res, next) => {
         name:req.body.name,
         userID:req.body.userID 
     })
-    res.status(200).json({
+    return res.status(200).json({
         status:"success",
         data:cartAdd
     })

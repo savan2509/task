@@ -25,7 +25,6 @@ mongoose.connect(db, )
     app.use('/api/v1/store', storeRouter)
     app.use('/api/v1/cart', cartRouter)
      app.use(globleErrorHandling);
-     
 
     app.all('*', (req, res, next) => {
         return next(new AppError(`can't fin d ${req.originalUrl} on this server`))
